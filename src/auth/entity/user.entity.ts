@@ -2,19 +2,23 @@ import {
   BaseEntity,
   Column,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
 
+import { UserInfo } from 'src/user-info/entity/user-info.entity';
+
 @Entity()
-@Unique(['email'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
+
+  @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
+  userInfo: UserInfo;
 }
