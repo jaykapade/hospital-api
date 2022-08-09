@@ -36,7 +36,7 @@ export class UserInfo {
   @Column()
   hasHighBP: boolean;
 
-  @OneToOne(() => User, (user) => user.userInfo)
+  @OneToOne(() => User, (user) => user.userInfo, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 }
