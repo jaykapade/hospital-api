@@ -6,15 +6,18 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/register-user.dto';
 import { User } from './entity/user.entity';
 import * as bcrypt from 'bcryptjs';
+import { LoginUserDto } from './dto/login-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
   async signUp(createUserDto: CreateUserDto) {
     const { email, password } = createUserDto;
@@ -32,17 +35,21 @@ export class AuthService {
     return await this.userRepository.save(user);
   }
 
-  async login(createUserDto: CreateUserDto) {
-    const { email, password } = createUserDto;
+  async login(loginUserDto: LoginUserDto) {
+    const { email, password } = loginUserDto;
     const user = await this.userRepository.findOneBy({ email });
-    console.log('🚀 ~ user', user);
     if (!user) throw new UnauthorizedException('No User Found');
 
     const isValid = bcrypt.compareSync(password, user.password);
-    console.log('🚀 ~ isValid', isValid);
 
     if (!isValid) throw new UnauthorizedException('No User Found');
 
-    return user;
+    const { id } = user;
+    console.log('🚀 ~ id', id);
+    const payload = { sub: id, email };
+    const token = await this.jwtService.sign(payload);
+    console.log('🚀 ~ accessToken', token);
+
+    return { token };
   }
 }
