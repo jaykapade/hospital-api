@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 
 import { UserInfo } from 'src/user-info/entity/user-info.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
@@ -16,6 +17,7 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
+  @Exclude()
   @Column()
   password: string;
 

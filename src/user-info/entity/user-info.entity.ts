@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/entity/user.entity';
 import {
   Column,
@@ -18,14 +19,14 @@ export class UserInfo {
   @Column()
   mobile_no: string;
   @Column()
-  dob: Date;
+  dob: string;
   @Column()
   age: number;
   @Column()
   weight: number;
   @Column()
   height: number;
-  @Column()
+  @Column({ type: 'decimal', scale: 2, default: 0 })
   bmi: number;
   @Column()
   origin: string;

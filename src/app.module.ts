@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entity/user.entity';
@@ -26,6 +27,9 @@ import { UserInfoModule } from './user-info/user-info.module';
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    //! Added interceptor like this if any dependencies are needed else check app.module : app.useGlobalInterceptors
+    // { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+  ],
 })
 export class AppModule {}
