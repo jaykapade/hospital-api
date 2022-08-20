@@ -37,6 +37,11 @@ export class UserInfoService {
 
   async createUserInfo(userdata: UserInfoDto, user: User) {
     try {
+      if (await this.getUserInfo(user))
+        throw new HttpException(
+          'UserInfo Already Present',
+          HttpStatus.BAD_REQUEST,
+        );
       const { dob, weight, height } = userdata;
       const age = calcAge(dob);
       const bmi = calcBmi(weight, height);
