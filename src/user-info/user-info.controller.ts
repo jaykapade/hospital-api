@@ -22,7 +22,6 @@ export class UserInfoController {
   // @UseGuards(JwtAuthGuard)
   @Get()
   async getUserInfo(@GetUser() user: User) {
-    const { id } = user;
     const userInfo = await this.userInfoService.getUserInfo(user);
     return userInfo;
   }
@@ -33,12 +32,12 @@ export class UserInfoController {
   }
 
   @Patch()
-  updateUserInfo() {
-    return;
+  async updateUserInfo(@Body() userData: UserInfoDto, @GetUser() user: User) {
+    return await this.userInfoService.updateUserInfo(userData, user);
   }
 
   @Delete()
-  deleteUserInfo() {
-    return;
+  async deleteUserInfo(@GetUser() user: User) {
+    return await this.userInfoService.deleteUserInfo(user);
   }
 }

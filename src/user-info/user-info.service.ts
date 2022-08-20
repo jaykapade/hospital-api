@@ -21,16 +21,13 @@ export class UserInfoService {
   async getUserInfo(user: User) {
     try {
       const { id } = user;
-      console.log('🚀 ~ id', id);
-      // const userInfo = await this.userInfoRepo.findOneBy({ id });
       const userInfo = await this.userInfoRepo
         .createQueryBuilder('userInfo')
         .leftJoinAndSelect('userInfo.user', 'user')
         .where('userInfo.userId = :userId', { userId: id })
         .getOne();
-      console.log('🚀 ~ userInfo', userInfo);
 
-      if (!userInfo) throw new NotFoundException('User not found.');
+      if (!userInfo) throw new NotFoundException('UserInfo not found.');
 
       return userInfo;
     } catch (err) {
@@ -39,12 +36,10 @@ export class UserInfoService {
   }
 
   async createUserInfo(userdata: UserInfoDto, user: User) {
-    console.log('🚀 ~ user', user);
     try {
       const { dob, weight, height } = userdata;
       const age = calcAge(dob);
       const bmi = calcBmi(weight, height);
-      console.log('🚀 ~ bmi', bmi);
 
       const userInfo = await this.userInfoRepo.create(userdata);
 
@@ -52,13 +47,35 @@ export class UserInfoService {
       userInfo.bmi = +bmi;
       userInfo.user = user;
 
-      // console.log('🚀 ~ userInfo', userInfo);
-
       const result = await this.userInfoRepo.save(userInfo);
-      console.log('🚀 ~ result', result);
 
-      // return userInfo;
       return result;
+    } catch (err) {
+      throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateUserInfo(userData: UserInfoDto, user: User) {
+    try {
+      let userInfo = await this.getUserInfo(user);
+      if (!userInfo) throw new NotFoundException('UserInfo not Found');
+
+      userInfo = this.userInfoRepo.create({ ...userInfo, ...userData });
+      return await this.userInfoRepo.save(userInfo);
+    } catch (err) {
+      throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async deleteUserInfo(user: User) {
+    try {
+      const userInfo = await this.getUserInfo(user);
+      if (!userInfo) throw new NotFoundException('UserInfo not Found');
+      const { id } = userInfo;
+      const result = await this.userInfoRepo.delete(id);
+      if (!result.affected) return { message: 'Delete Failed', success: false };
+
+      return { message: 'Delete UserInfo Successful', success: true };
     } catch (err) {
       throw new HttpException(err.message, HttpStatus.BAD_REQUEST);
     }

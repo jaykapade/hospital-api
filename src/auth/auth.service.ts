@@ -45,10 +45,8 @@ export class AuthService {
     if (!isValid) throw new UnauthorizedException('No User Found');
 
     const { id } = user;
-    console.log('🚀 ~ id', id);
     const payload = { sub: id, email };
     const token = await this.jwtService.sign(payload);
-    console.log('🚀 ~ accessToken', token);
 
     return { token };
   }
