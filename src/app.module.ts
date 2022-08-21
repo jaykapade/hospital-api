@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entity/user.entity';
 import { UserInfo } from './user-info/entity/user-info.entity';
 import { UserInfoModule } from './user-info/user-info.module';
+import { FamilyInfoModule } from './family-info/family-info.module';
+import { FamilyInfo } from './family-info/entity/family-info.entity';
 
 @Module({
   imports: [
@@ -17,12 +19,13 @@ import { UserInfoModule } from './user-info/user-info.module';
       username: 'postgres',
       password: 'postgres',
       database: 'hospital',
-      entities: [User, UserInfo],
+      entities: [User, UserInfo, FamilyInfo],
       //! can autoload entities please check
       // autoLoadEntities: true,
       synchronize: true,
     }),
     UserInfoModule,
+    FamilyInfoModule,
     //! Need to add this to get access the env variables in useFactory in auth.Module.ts
     ConfigModule.forRoot({ isGlobal: true }),
   ],

@@ -8,6 +8,7 @@ import {
 
 import { UserInfo } from 'src/user-info/entity/user-info.entity';
 import { Exclude } from 'class-transformer';
+import { FamilyInfo } from 'src/family-info/entity/family-info.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -23,4 +24,7 @@ export class User extends BaseEntity {
 
   @OneToOne(() => UserInfo, (userInfo) => userInfo.user)
   userInfo: UserInfo;
+
+  @OneToOne(() => FamilyInfo, (familyInfo) => familyInfo.user)
+  familyInfo: UserInfo;
 }

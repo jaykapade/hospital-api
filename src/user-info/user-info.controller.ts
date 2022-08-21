@@ -24,7 +24,7 @@ export class UserInfoController {
   @Get()
   async getUserInfo(@GetUser() user: User) {
     const userInfo = await this.userInfoService.getUserInfo(user);
-    if (!userInfo) throw new NotFoundException('UserInfoData not found.');
+    if (!userInfo) throw new NotFoundException('UserInfo not found.');
     return userInfo;
   }
 
