@@ -27,8 +27,6 @@ export class UserInfoService {
         .where('userInfo.userId = :userId', { userId: id })
         .getOne();
 
-      if (!userInfo) throw new NotFoundException('UserInfo not found.');
-
       return userInfo;
     } catch (err) {
       throw new NotFoundException(err.message);
